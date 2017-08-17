@@ -79,10 +79,10 @@ sense.show_message("Sensor")
 def main():
     print "Pi Sensor"
 
-    t = sense.get_temperature()
-    p = sense.get_pressure()
-    h = sense.get_humidity()
-    msg = "Temperature = {0}, Pressure = {1}, Humidity = {2}".format(t,p,h)
+    sensor.temperature = sense.get_temperature()
+    sensor.pressure = sense.get_pressure()
+    sensor.humidity = sense.get_humidity()
+    msg = "Temperature = {0}, Pressure = {1}, Humidity = {2}".format(sensor.temperature, sensor.pressure, sensor.humidity)
     sense.show_message(msg) #, scroll_speed=0.05)
 
 
@@ -92,7 +92,7 @@ def main():
     
     #fullUrl = "http://dev-messaging-service.appspot.com"
 
-    data = json.dumps({'Temperature' : t, 'Humidity': h, 'Pressure': p})
+    data = json.dumps({'Temperature' : sensor.temperature, 'Humidity': sensor.humidity, 'Pressure': sensor.pressure})
     print data
 
     print "Full URL = " + fullUrl
