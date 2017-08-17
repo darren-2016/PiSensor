@@ -18,6 +18,13 @@ import urllib2
 # Define raspPi as True if running on a Raspberry Pi, otherwise False.
 raspPi = False
 
+class Sensor:
+    temperature = 0;
+    pressure = 0;
+    humidity = 0;
+
+
+
 if raspPi == True:
     from sense_hat import SenseHat
 
@@ -52,6 +59,8 @@ def sendToReceiver():
 
 sense = SenseHat()
 
+sensor = Sensor()
+
 sense.show_message("Sensor")
 
 #while True:
@@ -77,23 +86,27 @@ def main():
     sense.show_message(msg) #, scroll_speed=0.05)
 
 
-    #url = "http://rdev.gpsbe.net:5013"
-    #port = "5013"
-    #fullUrl = url + ":" + port
+    url = "http://rdev.gpsbe.net"
+    port = "5013"
+    fullUrl = url + ":" + port
     
-    url = "http://dev-messaging-service.appspot.com"
+    #fullUrl = "http://dev-messaging-service.appspot.com"
 
     data = json.dumps({'Temperature' : t, 'Humidity': h, 'Pressure': p})
     print data
 
+    print "Full URL = " + fullUrl
 
-    u = urllib2.urlopen(url, data)
-    response = u.read()
+    u = urllib2.urlopen(fullUrl, data)
+    #response = u.getcode()
     
     
     print response
     
     u.close()
+
+
+
 
     #s = socket.socket()
 
