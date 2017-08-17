@@ -4,13 +4,13 @@
 # Get the temperate, humidity and pressure readings
 # Send the readings to the generic receiver rdev.gpsbe.net port 5013 - 
 # The generic receiver used for testing new receivers.
-#  http requests port 5013
+# http requests port 5013
 #
 #
 # Use HTTP Requests to send formatted data to port 5013 at rdev.gpsbe.net
 #
 
-#
+
 #import socket
 import json
 import urllib2
@@ -32,8 +32,9 @@ else:
     class SenseHat():
         # Get Temperature
         def get_temperature(self):
-            
+            print "Get Temperature"
             return 1
+
        # Get Pressure
         def get_pressure(self):
             print "Get Pressure"
@@ -50,11 +51,34 @@ else:
 
 
 ############################################################
-# sendToReceiver
-# Send the sensor readings to the generic receiver.
-# 
-def sendToReceiver():
-    print "SendToReceiver"
+# Function:    sendToReceiver
+# Description: Post the sensor readings to the generic receiver.
+# Parameters:  sensorData - the sensor readings passed in by 
+#                           means of the Sensor class.
+def sendToReceiver(sensorData):
+    print ">> sendToReceiver"
+    print "Temperature: " + str(sensorData.temperature)
+    print "Humidity:    " + str(sensorData.humidity)
+    print "Pressure:    " + str(sensorData.pressure)
+
+    receiverUrl = "http://rdev.gpsbe.net"
+    port = "5013"
+    fullUrl = receiverUrl + ":" + port
+    
+    #fullUrl = "http://dev-messaging-service.appspot.com"
+
+    data = json.dumps({'Temperature' : sensorData.temperature, 'Humidity': sensorData.humidity, 'Pressure': sensorData.pressure})
+    print data
+
+    print "Full URL = " + fullUrl
+
+    u = urllib2.urlopen(fullUrl, data)
+    #response = u.getcode()
+    #print response
+    
+    u.close()
+    print "Done!"
+
 
 
 sense = SenseHat()
@@ -82,39 +106,14 @@ def main():
     sensor.temperature = sense.get_temperature()
     sensor.pressure = sense.get_pressure()
     sensor.humidity = sense.get_humidity()
+
+    sendToReceiver(sensor)
+
     msg = "Temperature = {0}, Pressure = {1}, Humidity = {2}".format(sensor.temperature, sensor.pressure, sensor.humidity)
+    
     sense.show_message(msg) #, scroll_speed=0.05)
 
-
-    url = "http://rdev.gpsbe.net"
-    port = "5013"
-    fullUrl = url + ":" + port
-    
-    #fullUrl = "http://dev-messaging-service.appspot.com"
-
-    data = json.dumps({'Temperature' : sensor.temperature, 'Humidity': sensor.humidity, 'Pressure': sensor.pressure})
-    print data
-
-    print "Full URL = " + fullUrl
-
-    u = urllib2.urlopen(fullUrl, data)
-    #response = u.getcode()
-    
-    
-    print response
-    
-    u.close()
-
-
-
-
     #s = socket.socket()
-
-
-
-
-
-
 
 
 
